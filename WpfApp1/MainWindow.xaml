@@ -4,9 +4,181 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="Contact Manager" Height="600" Width="800" MinHeight="500" MinWidth="500"
+        >
+
+    <Window.Resources>
+        <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Load" />
+                <MenuItem Header="_Save" />
+                <Separator />
+                <MenuItem Header="_Exit" Click="MenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Column="0" Grid.ColumnSpan="2" Background="Beige">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="20" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" Name="label1" Content="Konto użytkownika" HorizontalAlignment="Center" FontSize="25"/>
+                <Rectangle Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="6" Stroke="Black" Fill="Transparent" StrokeThickness="2"/>
+
+                <Label Grid.Column="1" Grid.Row="1" Name="labelLogin" Content="Login:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBox Name="Login" Grid.Column="2" Grid.Row="1"/>
+                <Label Grid.Column="3" Grid.Row="1" Name="labelPassword" Content="Password:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBox Name="Pass" Grid.Column="4" Grid.Row="1"/>
+
+                <Button Name="buttonLogin" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Content="Zaloguj się" Click="buttonLogin_Click"/>
+
+            </Grid>
+
+            <Grid Grid.Column="0" Grid.Row="1">
+
+                <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Stroke="Black" Fill="Transparent" StrokeThickness="2"/>
+
+
+                <Grid>
+                    <Grid.Resources>
+                        <Style x:Key="alternatingWithTriggers" TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <Trigger Property="ListBox.AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="#FFFFC750"/>
+                                </Trigger>
+                                <Trigger Property="ListBox.AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="#FFFF9850"/>
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Background" Value="#E5E1CF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Resources>
+
+                    <ListView  Grid.Column="0" Grid.Row="0" x:Name="Lv2" Margin="5,5,5,5" ItemsSource="{Binding}" Background="BlanchedAlmond" AlternationCount="2" ItemContainerStyle="{StaticResource alternatingWithTriggers}" >
+                        <ListView.View>
+                            <GridView x:Name="grdNames2" ColumnHeaderContainerStyle= "{StaticResource myHeaderStyle}" >
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Label Content ="{Binding Name}" Width="150"/>
+                                                <Label Content ="{Binding Email}" Width="150"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.Column="1" Grid.Row="1">
+
+                <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Stroke="Black" Fill="Transparent" StrokeThickness="2"/>
+
+
+                <!--<ListView x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" >
+                    <ListView.View>
+                        <GridView x:Name="grdNames">
+                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="Surname"  DisplayMemberBinding="{Binding Surname}"/>
+                            <GridViewColumn Header="Email"  DisplayMemberBinding="{Binding Email}"/>
+                            <GridViewColumn Header="Phone"  DisplayMemberBinding="{Binding Phone}"/>
+                            <GridViewColumn Header="Gender"  DisplayMemberBinding="{Binding Gender}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>-->
+
+                <ListView x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" KeyDown="Lv_KeyDown">
+
+                    <ListView.View>
+                        <GridView x:Name="grdNames">
+                            <GridViewColumn Header="Name" Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Name}" Width="150" BorderThickness="0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Surname" Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Surname}" Width="150" BorderThickness="0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+
+                            <GridViewColumn Header="Email" Width="200">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Email}" Width="200" BorderThickness="0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Phone" Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Phone}" Width="150" BorderThickness="0"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn Header="Gender" Width="150">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Gender}" Width="150" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+
+            </Grid>
+        </Grid>
+    </DockPanel>
 </Window>
