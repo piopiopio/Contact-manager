@@ -13,22 +13,90 @@
         <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" >
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="true">
+                                <Setter Property="Background" TargetName="border" >
+                                    <Setter.Value>
+                                        <RadialGradientBrush>
+                                            <GradientStop Color="#FFC56666" Offset="0"/>
+                                            <GradientStop Color="Beige" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush>
+                                            <GradientStop Color="Yellow" Offset="0"/>
+                                            <GradientStop Color="Beige" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <!--<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>-->
+                            </Trigger>
+                            <!--<Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>-->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <DockPanel>
+    <DockPanel >
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Load" />
-                <MenuItem Header="_Save" />
+                <MenuItem Header="_Load" Click="Load_Click" />
+                <MenuItem Header="_Save" Click="Save_Click"/>
                 <Separator />
                 <MenuItem Header="_Exit" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
 
 
-        <Grid>
+        <Grid Name="MainGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -36,7 +104,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Column="0" Grid.ColumnSpan="2" Background="Beige">
+            <Grid Grid.Column="0" Grid.ColumnSpan="3" Background="Beige">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -63,11 +131,23 @@
                 <Label Grid.Column="3" Grid.Row="1" Name="labelPassword" Content="Password:" HorizontalAlignment="Right" VerticalAlignment="Center" />
                 <TextBox Name="Pass" Grid.Column="4" Grid.Row="1"/>
 
-                <Button Name="buttonLogin" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Content="Zaloguj się" Click="buttonLogin_Click"/>
+                <Button Name="buttonLogin" Grid.Column="3" Grid.Row="3" Content="Login" Click="buttonLogin_Click" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
+                <Button Name="buttonRegister" Grid.Column="2" Grid.Row="3" Content="Register" Click="buttonRegister_Click" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
+
+                <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2">
+                    <Label Name="label2" Content="Logged as: " HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Visibility="Hidden"/>
+                    <Label Name="label3" Content=" " HorizontalAlignment="Center" FontSize="25" Visibility="Hidden"/>
+                </StackPanel>
+
+                <Button Name="SaveContacts" Grid.Column="2" Grid.Row="3" Content="Save contacts" Click="SaveContacts_Click"  Visibility="Hidden" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
+
+
+
+                <Button Name="Logout" Grid.Column="3" Grid.Row="3"  Content="Logout" Click="Logout_Click"  Visibility="Hidden" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
 
             </Grid>
 
-            <Grid Grid.Column="0" Grid.Row="1">
+            <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
 
                 <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Stroke="Black" Fill="Transparent" StrokeThickness="2"/>
 
@@ -90,15 +170,22 @@
                         </Style>
                     </Grid.Resources>
 
-                    <ListView  Grid.Column="0" Grid.Row="0" x:Name="Lv2" Margin="5,5,5,5" ItemsSource="{Binding}" Background="BlanchedAlmond" AlternationCount="2" ItemContainerStyle="{StaticResource alternatingWithTriggers}" >
+                    <ListView  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" x:Name="Lv2" Margin="5,5,5,5" ItemsSource="{Binding}" Background="BlanchedAlmond" AlternationCount="2" ItemContainerStyle="{StaticResource alternatingWithTriggers}" MouseUp="Lv2_MouseUp" >
                         <ListView.View>
                             <GridView x:Name="grdNames2" ColumnHeaderContainerStyle= "{StaticResource myHeaderStyle}" >
                                 <GridViewColumn>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel>
-                                                <Label Content ="{Binding Name}" Width="150"/>
-                                                <Label Content ="{Binding Email}" Width="150"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Content ="{Binding Name}"/>
+                                                    <Label Content ="{Binding Surname}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Content ="Email:" FontWeight="Bold"/>
+                                                    <Label Content ="{Binding Email}"/>
+                                                </StackPanel>
+
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -111,74 +198,76 @@
 
             </Grid>
 
-            <Grid Grid.Column="1" Grid.Row="1">
+            <Grid Grid.Column="2" Grid.Row="1" >
 
-                <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Stroke="Black" Fill="Transparent" StrokeThickness="2"/>
+                <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Stroke="Black" Fill="Transparent" StrokeThickness="2" />
+                <StackPanel>
+                    <Grid Name="ContactInfo" Background="#42bbcf" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
 
-                <!--<ListView x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" >
-                    <ListView.View>
-                        <GridView x:Name="grdNames">
-                            <GridViewColumn Header="Name"  DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="Surname"  DisplayMemberBinding="{Binding Surname}"/>
-                            <GridViewColumn Header="Email"  DisplayMemberBinding="{Binding Email}"/>
-                            <GridViewColumn Header="Phone"  DisplayMemberBinding="{Binding Phone}"/>
-                            <GridViewColumn Header="Gender"  DisplayMemberBinding="{Binding Gender}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
+                        <Image Grid.Column="0" Grid.RowSpan="4" Grid.Row="0" Name="Image1" Source="D:\Studia\Informatyka MGR\Semestr 1\PwSG\WPF lab1\WpfApp1\WpfApp1\Resources\woman.jpg" Margin="10" HorizontalAlignment="Left"/>
+                        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                            <Label Name="CDName"  Content="Name: " FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDNameContent"  Content="Name" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                            <Label Name="CDSurname"  Content="Surname: " FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDSurnameContent"  Content="Surname" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                            <Label Name="CDEmail"  Content="Email: " FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDEmailContent"  Content="Email" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                            <Label Name="CDPhone"  Content="Phone: " FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDPhoneContent"  Content="Phone" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="4"  Name="DeleteImage"  Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Click="DeleteImage_Click">
+                            <StackPanel>
+                                <Image Source="D:\Studia\Informatyka MGR\Semestr 1\PwSG\WPF lab1\WpfApp1\WpfApp1\Resources\remove.png" Width="80"/>
+                            </StackPanel>
+                        </Button>
 
-                <ListView x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" KeyDown="Lv_KeyDown">
+                    </Grid>
 
-                    <ListView.View>
-                        <GridView x:Name="grdNames">
-                            <GridViewColumn Header="Name" Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox Text="{Binding Name}" Width="150" BorderThickness="0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                            <GridViewColumn Header="Surname" Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox Text="{Binding Surname}" Width="150" BorderThickness="0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-
-                            <GridViewColumn Header="Email" Width="200">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox Text="{Binding Email}" Width="200" BorderThickness="0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                            <GridViewColumn Header="Phone" Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox Text="{Binding Phone}" Width="150" BorderThickness="0"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                            <GridViewColumn Header="Gender" Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBox Text="{Binding Gender}" Width="150" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus"  >
+                        <!--<DataGrid.Columns >-->
+                            <!--<DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding Surname}" Header="Surname" Width="80"/>
+                            <DataGridTextColumn Binding="{Binding Email}" Header="Email" Width="170" />
+                            <DataGridTextColumn Binding="{Binding Phone}" Header="Phone" Width="130"/>
+                            <DataGridTextColumn Binding="{Binding Gender}" Header="Gender" Width="70"/>-->
+                        <!--</DataGrid.Columns>-->
+                    </DataGrid>
+                </StackPanel>
 
 
-            </Grid>
+            </Grid >
+
+            <!--
+            UWIDOCZNIC
+            -->
+            <Rectangle Name="PleaseLogin" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" StrokeThickness="0" Visibility="Visible" >
+                <Rectangle.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#FFFFB900" Offset="0"/>
+                        <GradientStop Color="#FF79FF00" Offset="1"/>
+                    </RadialGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Label Name="PleaseLoginLabel" Content="Please login to show the contacts." Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Visibility="Visible"/>
+
         </Grid>
     </DockPanel>
 </Window>

@@ -1,7 +1,9 @@
 ﻿using EmailContactsExtension;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace WpfApp1
 {
@@ -21,12 +24,16 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        ContactManager contactManager = new ContactManager();
+        RegistrationWindow window;
+        public ContactManager contactManager = new ContactManager();
         private ObservableCollection<Contact> _contactsCollection = new ObservableCollection<Contact>();
-
+        private ObservableCollection<Contact> _fillContactsCollection = new ObservableCollection<Contact>();
+        User user;
+        User SelectedContact;
         public MainWindow()
         {
             InitializeComponent();
+
         }
         public ObservableCollection<Contact> ContactsCollection
         {
@@ -44,10 +51,10 @@ namespace WpfApp1
 
         private void buttonLogin_Click(object sender, RoutedEventArgs e)
         {
-            //User user = contactManager.GetUser(Login.Text, Pass.Text);
+            user = contactManager.GetUser(Login.Text, Pass.Text);
 
             //Autologowanie
-            User user = contactManager.GetUser("mini", "pw");
+            //user = contactManager.GetUser("mini", "pw");
             if (user == null)
             {
                 MessageBox.Show("Incorrect login or password.", "An error occured", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -60,26 +67,64 @@ namespace WpfApp1
                     ContactsCollection.Add(k);
                 }
                 Lv.DataContext = _contactsCollection;
-                Lv2.DataContext = _contactsCollection;
+
+                _fillContactsCollection = new ObservableCollection<Contact>(_contactsCollection.Where(p => p.Name != ""));
+                Lv2.DataContext = _fillContactsCollection;
+
+                setLoggedState(true);
             }
+        }
+
+        private void setLoggedState(bool logged)
+        {
+
+            Visibility a, b;
+            if (logged)
+            {
+                a = Visibility.Hidden;
+                b = Visibility.Visible;
+                label3.Content = user.Login.ToString();
+            }
+            else
+            {
+                a = Visibility.Visible;
+                b = Visibility.Hidden;
+            }
+            PleaseLoginLabel.Visibility = a;
+            PleaseLogin.Visibility = a;
+            labelLogin.Visibility = a;
+            Login.Visibility = a;
+            labelPassword.Visibility = a;
+            Pass.Visibility = a;
+            buttonLogin.Visibility = a;
+            label1.Visibility = a;
+            buttonLogin.Visibility = a;
+            buttonRegister.Visibility = a;
+            label2.Visibility = b;
+            label3.Visibility = b;
+            SaveContacts.Visibility = b;
+            Logout.Visibility = b;
+            SaveContacts.Visibility = b;
+            Logout.Visibility = b;
+
+
         }
         private void Lv_KeyDown(object sender, KeyEventArgs e)
         {
 
             if (Key.Delete == e.Key)
             {
-                //foreach (Contact listViewItem in ((ListView)sender).SelectedItems)
-                //{
-                //    _contactsCollection.Remove(listViewItem);
-                //}
-               
                 if (e.Key == Key.Delete)
                 {
                     ObservableCollection<Contact> ToDelete = new ObservableCollection<Contact>();
-                    var temp =  Lv.SelectedItems;
+                    var temp = Lv.SelectedItems;
                     foreach (var item in temp)
                     {
-                        ToDelete.Add((Contact)item);
+                        try
+                        {
+                            ToDelete.Add((Contact)item);
+                        }
+                        catch { }
                     }
 
                     foreach (var item in ToDelete)
@@ -87,9 +132,220 @@ namespace WpfApp1
                         _contactsCollection.Remove(item);
                     }
 
+                    List<Contact> listToUpdateUserContacts = new List<Contact>();
+
+                    foreach (var item in _contactsCollection)
+                    {
+                        listToUpdateUserContacts.Add(item);
+                    }
+
+                    user.SaveContacts(listToUpdateUserContacts);
+
+                    contactManager.GetUser(user.Login, user.Password).SaveContacts(listToUpdateUserContacts);
 
                 }
             }
         }
+
+        private void Lv_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _fillContactsCollection = new ObservableCollection<Contact>(_contactsCollection.Where(p => p.Name != ""));
+            Lv2.DataContext = _fillContactsCollection;
+        }
+
+
+
+        private void Load_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Title = "Open";
+            op.Filter = "Load users|*.xml; *.xml";
+            if (op.ShowDialog() == true)
+            {
+                try
+                {
+                    DeserializeDataSet(op.FileName);
+                }
+                catch
+                {
+                    MessageBox.Show("File read error");
+                }
+            }
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sa = new SaveFileDialog();
+            sa.Title = "Save";
+            sa.Filter = "Save users|*.xml; *.xml";
+
+            if (sa.ShowDialog() == true)
+            {
+                File.WriteAllText(sa.FileName, "Test");
+                SerializeDataSet(sa.FileName);
+                MessageBox.Show("Save successful");
+
+            }
+        }
+
+
+        private void SerializeDataSet(string filename)
+        {
+            List<userStruct> ToExport = new List<userStruct>();
+
+            foreach (var item in contactManager.GetUsers())
+            {
+                userStruct us = new userStruct();
+                us.user = item;
+                us.contacts = item.GetContacts();
+                ToExport.Add(us);
+            }
+
+
+            XmlSerializer ser = new XmlSerializer(typeof(List<userStruct>));
+            TextWriter writer = new StreamWriter(filename);
+            ser.Serialize(writer, ToExport);
+            writer.Close();
+        }
+
+        private void DeserializeDataSet(string filename)
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(List<userStruct>));
+            var reader = new StreamReader(filename);
+            var List = (List<userStruct>)ser.Deserialize(reader);
+            reader.Close();
+
+            List<User> importedUsers = new List<User>(); ;
+            foreach (var item in List)
+            {
+                item.user.SaveContacts(item.contacts);
+                importedUsers.Add(item.user);
+            }
+
+            contactManager.SetUsers(importedUsers);
+            _contactsCollection.Clear();
+
+            if (user != null)
+            {
+                foreach (var k in contactManager.GetUser(user.Login, user.Password).GetContacts())
+                {
+                    _contactsCollection.Add(k);
+                }
+                Lv.Items.Refresh();
+                Lv2.Items.Refresh();
+            }
+        }
+
+        public struct userStruct
+        {
+            public User user;
+            public List<Contact> contacts;
+
+        }
+
+        private void Lv_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Lv_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+
+            List<Contact> listToUpdateUserContacts = new List<Contact>();
+
+            foreach (var item in _contactsCollection)
+            {
+                listToUpdateUserContacts.Add(item);
+            }
+
+            user.SaveContacts(listToUpdateUserContacts);
+        }
+
+        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        {
+            this.Opacity = 0.5;
+            window = new RegistrationWindow() { Owner = this };
+
+            window.ShowDialog();
+
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            user = new User();
+            setLoggedState(false);
+            _contactsCollection.Clear();
+        }
+
+        private ICommand _addBezierPatch;
+        public ICommand AddBezierPatch { get { return _addBezierPatch ?? (_addBezierPatch = new ActionCommand(AddBezierPatchExecuted)); } }
+        public void AddBezierPatchExecuted()
+        {
+
+        }
+
+        public void RegisterUser(string login, string password)
+        {
+            contactManager.RegisterUser(login, password);
+
+            window.Close();
+
+        }
+
+        private void SaveContacts_Click(object sender, RoutedEventArgs e)
+        {
+            // user.SaveContacts(user.GetContacts());
+        }
+
+
+
+
+        private void Lv2_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ContactDetails();
+        }
+
+        private void ContactDetails()
+        {
+            var temp = (Contact)Lv2.SelectedItem;
+            if (temp == null)
+            {
+                ContactInfo.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ContactInfo.Visibility = Visibility.Visible;
+                CDNameContent.Content = temp.Name;
+                CDSurnameContent.Content = temp.Surname;
+                CDEmailContent.Content = temp.Email;
+                CDPhoneContent.Content = temp.Phone;
+                if (temp.Gender == Gender.Female)
+                {
+                    Image1.Source = new BitmapImage(new Uri("D:/Studia/Informatyka MGR/Semestr 1/PwSG/WPF lab1/WpfApp1/WpfApp1/Resources/woman.jpg"));
+                }
+                else
+                {
+                    Image1.Source = new BitmapImage(new Uri("D:/Studia/Informatyka MGR/Semestr 1/PwSG/WPF lab1/WpfApp1/WpfApp1/Resources/man.png"));
+                }
+            }
+        }
+
+        private void DeleteImage_Click(object sender, RoutedEventArgs e)
+        {
+            var temp = (Contact)Lv2.SelectedItem;
+            if (temp == null)
+            {
+                ContactInfo.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                
+                _contactsCollection.Remove(temp);
+
+            }
+            ContactDetails();
+        }
     }
+
+
 }
