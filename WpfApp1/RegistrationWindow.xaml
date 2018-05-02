@@ -41,7 +41,7 @@
         </Grid>
         
         <Label Grid.Column="0" Grid.Row="3" Content="Password" VerticalAlignment="Center" Margin="10"/>
-        <TextBox Name="RegisterPassword" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" />
+        <PasswordBox Name="RegisterPassword" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" PasswordChar="●"/>
 
         <Label Grid.Column="0" Grid.Row="4" Content="Confirm password" VerticalAlignment="Center" Margin="10"/>
         <TextBox Name="RegisterConfirmPassword" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" />

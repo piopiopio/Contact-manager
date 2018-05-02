@@ -39,9 +39,9 @@ namespace WpfApp1
         private void RegisterRegster_Click(object sender, RoutedEventArgs e)
         {
             a = (MainWindow)Owner;
-            if ((RegisterPassword.Text == RegisterConfirmPassword.Text) && validatedEmail && RegisterPassword.Text!="" && RegisterLogin.Text!="")
+            if ((RegisterPassword.Password == RegisterConfirmPassword.Text) && validatedEmail && RegisterPassword.Password!="" && RegisterLogin.Text!="")
             {
-                a.RegisterUser(RegisterLogin.Text, RegisterPassword.Text);
+                a.RegisterUser(RegisterLogin.Text, RegisterPassword.Password);
                 Owner.Opacity = 1;
             }
             else

@@ -30,6 +30,7 @@ namespace WpfApp1
         private ObservableCollection<Contact> _fillContactsCollection = new ObservableCollection<Contact>();
         User user;
         User SelectedContact;
+        Contact temp;
         public MainWindow()
         {
             InitializeComponent();
@@ -51,7 +52,7 @@ namespace WpfApp1
 
         private void buttonLogin_Click(object sender, RoutedEventArgs e)
         {
-            user = contactManager.GetUser(Login.Text, Pass.Text);
+            user = contactManager.GetUser(Login.Text, Pass.Password);
 
             //Autologowanie
             //user = contactManager.GetUser("mini", "pw");
@@ -132,17 +133,29 @@ namespace WpfApp1
                         _contactsCollection.Remove(item);
                     }
 
-                    List<Contact> listToUpdateUserContacts = new List<Contact>();
+                    //List<Contact> listToUpdateUserContacts = new List<Contact>();
 
-                    foreach (var item in _contactsCollection)
-                    {
-                        listToUpdateUserContacts.Add(item);
-                    }
+                    //    foreach (var item in _contactsCollection)
+                    //    {
+                    //        listToUpdateUserContacts.Add(item);
+                    //    }
 
-                    user.SaveContacts(listToUpdateUserContacts);
+                    //    user.SaveContacts(listToUpdateUserContacts);
 
-                    contactManager.GetUser(user.Login, user.Password).SaveContacts(listToUpdateUserContacts);
+                    //    contactManager.GetUser(user.Login, user.Password).SaveContacts(listToUpdateUserContacts);
 
+                    //}
+
+                    ////temp = (Contact)Lv.SelectedItem;
+                    ////if (temp != null)
+                    ////{
+
+                    ////    _contactsCollection.Remove(temp);
+                    ////    Lv2.Items.Refresh();
+                    ////    Lv.Items.Refresh();
+
+                    ////}
+                    ////ContactInfo.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -265,14 +278,13 @@ namespace WpfApp1
         {
             this.Opacity = 0.5;
             window = new RegistrationWindow() { Owner = this };
-
             window.ShowDialog();
 
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
-            user = new User();
+            user = null;
             setLoggedState(false);
             _contactsCollection.Clear();
         }
@@ -294,7 +306,13 @@ namespace WpfApp1
 
         private void SaveContacts_Click(object sender, RoutedEventArgs e)
         {
-            // user.SaveContacts(user.GetContacts());
+            List<Contact> listToUpdateUserContacts = new List<Contact>();
+
+            foreach (var item in _contactsCollection)
+            {
+                listToUpdateUserContacts.Add(item);
+            }
+            contactManager.GetUser(user.Login, user.Password).SaveContacts(listToUpdateUserContacts);
         }
 
 
@@ -307,7 +325,7 @@ namespace WpfApp1
 
         private void ContactDetails()
         {
-            var temp = (Contact)Lv2.SelectedItem;
+            temp = (Contact)Lv2.SelectedItem;
             if (temp == null)
             {
                 ContactInfo.Visibility = Visibility.Collapsed;
@@ -332,18 +350,16 @@ namespace WpfApp1
 
         private void DeleteImage_Click(object sender, RoutedEventArgs e)
         {
-            var temp = (Contact)Lv2.SelectedItem;
-            if (temp == null)
+            //temp = (Contact)Lv2.SelectedItem;
+            if (temp != null)
             {
-                ContactInfo.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                
+
                 _contactsCollection.Remove(temp);
+                Lv2.Items.Refresh();
+                Lv.Items.Refresh();
 
             }
-            ContactDetails();
+            ContactInfo.Visibility = Visibility.Collapsed;
         }
     }
 
