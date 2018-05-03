@@ -5,48 +5,95 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="RegistrationWindow" Height="300" Width="300"
+        Title="RegistrationWindow" Height="260" Width="350"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize">
+    <Window.Resources>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <Style x:Key="TextBoxStyle1" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
-
-        <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Content="Register User" HorizontalAlignment="Center" FontSize="30"/>
-
-
-        <Label Grid.Column="0" Grid.Row="1" Content="Login" VerticalAlignment="Center" Margin="10"/>
-        <TextBox Name="RegisterLogin" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" />
+        <Rectangle Fill="Transparent" Grid.ColumnSpan ="99" Grid.RowSpan="99" Stroke="Black" StrokeThickness="4"/>
+        <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Content="Register User" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"/>
 
 
-        
-        <Label Grid.Column="0" Grid.Row="2" Content="E-mail" VerticalAlignment="Center" Margin="10"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Login" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        <TextBox Name="RegisterLogin" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Style="{DynamicResource TextBoxStyle1}" />
+
+
+
+        <Label Grid.Column="0" Grid.Row="2" Content="E-mail" VerticalAlignment="Center" Margin="10,0,0,0"/>
         <TextBox Name="RegisterEmail" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" TextChanged="RegisterEmail_TextChanged" />
-        <Grid Grid.Column="2" Grid.Row="2" Name="RegisterEmailGrid" Visibility="Hidden" ToolTip="Wrong e-mail format!">
-            <Ellipse Width="12" Height="12" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center"></Ellipse>
-            <TextBlock Foreground="White" FontWeight="Heavy" FontSize="8" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" >X</TextBlock>
+        <Grid Grid.Column="2" Grid.Row="2" Name="RegisterEmailGrid" Visibility="Hidden" ToolTip="Wrong e-mail format!" Margin="0,0,5,0">
+            <Rectangle Width="12" Height="12" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center" RadiusY="3" RadiusX="3" ></Rectangle>
+            <TextBlock Foreground="White" FontWeight="Heavy" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Margin="0,0,0,1">X</TextBlock>
         </Grid>
-        
-        <Label Grid.Column="0" Grid.Row="3" Content="Password" VerticalAlignment="Center" Margin="10"/>
+
+        <Label Grid.Column="0" Grid.Row="3" Content="Password" VerticalAlignment="Center" Margin="10,0,0,0"/>
         <PasswordBox Name="RegisterPassword" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" PasswordChar="●"/>
 
-        <Label Grid.Column="0" Grid.Row="4" Content="Confirm password" VerticalAlignment="Center" Margin="10"/>
-        <TextBox Name="RegisterConfirmPassword" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" />
+        <Label Grid.Column="0" Grid.Row="4" Content="Confirm password" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        <PasswordBox Name="RegisterConfirmPassword" Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" />
 
-        <Button Name="RegisterCancel" Grid.Column="0" Grid.Row="5" Content="Cancel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="RegisterCancel_Click"/>
-        <Button Name="RegisterRegster" Grid.Column="1" Grid.Row="5" Content="Register" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Click="RegisterRegster_Click"/>
+        <Button Name="RegisterCancel" Grid.Column="0" Grid.Row="5" Content="Cancel" VerticalAlignment="Center" HorizontalAlignment="Right" Width="90" Height="30" Margin="10" Click="RegisterCancel_Click"/>
+        <Button Name="RegisterRegster" Grid.Column="1" Grid.Row="5" Content="Register" VerticalAlignment="Center" HorizontalAlignment="Left" Width="90" Height="30" Margin="10"  Click="RegisterRegster_Click"/>
     </Grid>
 </Window>

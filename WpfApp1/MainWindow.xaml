@@ -13,6 +13,8 @@
         <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
+        
+        
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -42,22 +44,33 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" >
+                        <!--<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" >
                             <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
+                        </Border>-->
+                        <Grid>
+                            <Ellipse Fill="White" Stroke="Black" Height="32" Width="80" x:Name="theEllipse" VerticalAlignment="Center" HorizontalAlignment="Center"  StrokeThickness="0">
+                                <Ellipse.BitmapEffect>
+                                    <BlurBitmapEffect Radius="2" KernelType="Box" />
+
+                                </Ellipse.BitmapEffect>
+                            </Ellipse>
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="true">
-                                <Setter Property="Background" TargetName="border" >
+                                <!--<Setter Property="Background" TargetName="border" >-->
+                                <Setter Property="Fill" TargetName="theEllipse" >
                                     <Setter.Value>
                                         <RadialGradientBrush>
-                                            <GradientStop Color="#FFC56666" Offset="0"/>
-                                            <GradientStop Color="Beige" Offset="1"/>
+                                            <GradientStop Color="Beige" Offset="0"/>
+                                            <GradientStop Color="#FFD6A1A1" Offset="1"/>
                                         </RadialGradientBrush>
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="border">
+                                <!--<Setter Property="Background" TargetName="border">-->
+                                    <Setter Property="Fill" TargetName="theEllipse" >
                                     <Setter.Value>
                                         <RadialGradientBrush>
                                             <GradientStop Color="Yellow" Offset="0"/>
@@ -84,11 +97,11 @@
 
     <DockPanel >
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Load" Click="Load_Click" />
-                <MenuItem Header="_Save" Click="Save_Click"/>
+            <MenuItem Header="File">
+                <MenuItem Header="Import" Click="Load_Click" />
+                <MenuItem Header="Export" Click="Save_Click"/>
                 <Separator />
-                <MenuItem Header="_Exit" Click="MenuItem_Click"/>
+                <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
 
@@ -134,9 +147,9 @@
                 <Button Name="buttonLogin" Grid.Column="3" Grid.Row="3" Content="Login" Click="buttonLogin_Click" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
                 <Button Name="buttonRegister" Grid.Column="2" Grid.Row="3" Content="Register" Click="buttonRegister_Click" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
 
-                <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2">
-                    <Label Name="label2" Content="Logged as: " HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Visibility="Hidden"/>
-                    <Label Name="label3" Content=" " HorizontalAlignment="Center" FontSize="25" Visibility="Hidden"/>
+                <StackPanel Orientation="Horizontal"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Label Name="label2" Content="Logged as: " HorizontalAlignment="Center" FontSize="25" Visibility="Hidden"/>
+                    <Label Name="label3" Content=" " HorizontalAlignment="Center" FontSize="25" Visibility="Hidden" FontWeight="Bold"/>
                 </StackPanel>
 
                 <Button Name="SaveContacts" Grid.Column="2" Grid.Row="3" Content="Save contacts" Click="SaveContacts_Click"  Visibility="Hidden" BorderThickness="0" Style="{DynamicResource ButtonStyle1}"/>
@@ -159,8 +172,13 @@
                                 <Trigger Property="ListBox.AlternationIndex" Value="0">
                                     <Setter Property="Background" Value="#FFFFC750"/>
                                 </Trigger>
+                                
                                 <Trigger Property="ListBox.AlternationIndex" Value="1">
                                     <Setter Property="Background" Value="#FFFF9850"/>
+                                </Trigger>
+
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="Background" Value="#E5E1CF"/>
                                 </Trigger>
 
                                 <Trigger Property="IsMouseOver" Value="true">
@@ -202,10 +220,17 @@
 
                 <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Stroke="Black" Fill="Transparent" StrokeThickness="2" />
                 <StackPanel>
-                    <Grid Name="ContactInfo" Background="#42bbcf" Visibility="Collapsed">
+                    
+                    <Grid Name="ContactInfo" Visibility="Collapsed">
+                        <Grid.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+                                <GradientStop Color="#e0f4ff" Offset="0"/>
+                                <GradientStop Color="#8cd5ff" Offset="0.567"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="160" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
@@ -216,32 +241,32 @@
                             <RowDefinition Height="40" />
                         </Grid.RowDefinitions>
 
-                        <Image Grid.Column="0" Grid.RowSpan="4" Grid.Row="0" Name="Image1" Source="D:\Studia\Informatyka MGR\Semestr 1\PwSG\WPF lab1\WpfApp1\WpfApp1\Resources\woman.jpg" Margin="10" HorizontalAlignment="Left"/>
+                        <Image Grid.Column="0" Grid.RowSpan="4" Grid.Row="0" Name="Image1" Source="D:\Studia\Informatyka MGR\Semestr 1\PwSG\WPF lab1\WpfApp1\WpfApp1\Resources\woman.jpg" Margin="10 " HorizontalAlignment="Center" VerticalAlignment="Center" Width="140" Height="140" Stretch="Fill"/>
                         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
                             <Label Name="CDName"  Content="Name: " FontWeight="Bold" VerticalAlignment="Center"/>
-                            <Label Name="CDNameContent"  Content="Name" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDNameContent"  Content="Name" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
                             <Label Name="CDSurname"  Content="Surname: " FontWeight="Bold" VerticalAlignment="Center"/>
-                            <Label Name="CDSurnameContent"  Content="Surname" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDSurnameContent"  Content="Surname" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
                             <Label Name="CDEmail"  Content="Email: " FontWeight="Bold" VerticalAlignment="Center"/>
-                            <Label Name="CDEmailContent"  Content="Email" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDEmailContent"  Content="Email" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
                             <Label Name="CDPhone"  Content="Phone: " FontWeight="Bold" VerticalAlignment="Center"/>
-                            <Label Name="CDPhoneContent"  Content="Phone" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Label Name="CDPhoneContent"  Content="Phone" VerticalAlignment="Center"/>
                         </StackPanel>
                         <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="4"  Name="DeleteImage"  Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Click="DeleteImage_Click">
                             <StackPanel>
-                                <Image Source="D:\Studia\Informatyka MGR\Semestr 1\PwSG\WPF lab1\WpfApp1\WpfApp1\Resources\remove.png" Width="80"/>
+                                <Image Source="D:\Studia\Informatyka MGR\Semestr 1\PwSG\WPF lab1\WpfApp1\WpfApp1\Resources\remove.png" Width="60"/>
                             </StackPanel>
                         </Button>
 
                     </Grid>
 
-                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus"  >
+                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus">
                         <!--<DataGrid.Columns >-->
                             <!--<DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="80"/>
                             <DataGridTextColumn Binding="{Binding Surname}" Header="Surname" Width="80"/>

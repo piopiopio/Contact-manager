@@ -26,7 +26,7 @@ namespace WpfApp1
     {
         RegistrationWindow window;
         public ContactManager contactManager = new ContactManager();
-        private ObservableCollection<Contact> _contactsCollection = new ObservableCollection<Contact>();
+        private ObservableCollection<Contact> _contactsCollection1 = new ObservableCollection<Contact>();
         private ObservableCollection<Contact> _fillContactsCollection = new ObservableCollection<Contact>();
         User user;
         User SelectedContact;
@@ -38,11 +38,16 @@ namespace WpfApp1
         }
         public ObservableCollection<Contact> ContactsCollection
         {
-            get { return _contactsCollection; }
+            get
+            {
+                ContactDetails();
+                return _contactsCollection1;
+                
+            }
             set
             {
-                _contactsCollection = value;
-
+                _contactsCollection1 = value;
+              //  ContactDetails();
             }
         }
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -67,9 +72,9 @@ namespace WpfApp1
                 {
                     ContactsCollection.Add(k);
                 }
-                Lv.DataContext = _contactsCollection;
+                Lv.DataContext = ContactsCollection;
 
-                _fillContactsCollection = new ObservableCollection<Contact>(_contactsCollection.Where(p => p.Name != ""));
+                _fillContactsCollection = new ObservableCollection<Contact>(ContactsCollection.Where(p => p.Name != ""));
                 Lv2.DataContext = _fillContactsCollection;
 
                 setLoggedState(true);
@@ -112,57 +117,12 @@ namespace WpfApp1
         }
         private void Lv_KeyDown(object sender, KeyEventArgs e)
         {
-
-            if (Key.Delete == e.Key)
-            {
-                if (e.Key == Key.Delete)
-                {
-                    ObservableCollection<Contact> ToDelete = new ObservableCollection<Contact>();
-                    var temp = Lv.SelectedItems;
-                    foreach (var item in temp)
-                    {
-                        try
-                        {
-                            ToDelete.Add((Contact)item);
-                        }
-                        catch { }
-                    }
-
-                    foreach (var item in ToDelete)
-                    {
-                        _contactsCollection.Remove(item);
-                    }
-
-                    //List<Contact> listToUpdateUserContacts = new List<Contact>();
-
-                    //    foreach (var item in _contactsCollection)
-                    //    {
-                    //        listToUpdateUserContacts.Add(item);
-                    //    }
-
-                    //    user.SaveContacts(listToUpdateUserContacts);
-
-                    //    contactManager.GetUser(user.Login, user.Password).SaveContacts(listToUpdateUserContacts);
-
-                    //}
-
-                    ////temp = (Contact)Lv.SelectedItem;
-                    ////if (temp != null)
-                    ////{
-
-                    ////    _contactsCollection.Remove(temp);
-                    ////    Lv2.Items.Refresh();
-                    ////    Lv.Items.Refresh();
-
-                    ////}
-                    ////ContactInfo.Visibility = Visibility.Collapsed;
-                }
-            }
+            ContactDetails();
         }
 
         private void Lv_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _fillContactsCollection = new ObservableCollection<Contact>(_contactsCollection.Where(p => p.Name != ""));
+            _fillContactsCollection = new ObservableCollection<Contact>(ContactsCollection.Where(p => p.Name != ""));
             Lv2.DataContext = _fillContactsCollection;
         }
 
@@ -170,6 +130,7 @@ namespace WpfApp1
 
         private void Load_Click(object sender, RoutedEventArgs e)
         {
+            setLoggedState(false);
             OpenFileDialog op = new OpenFileDialog();
             op.Title = "Open";
             op.Filter = "Load users|*.xml; *.xml";
@@ -236,13 +197,13 @@ namespace WpfApp1
             }
 
             contactManager.SetUsers(importedUsers);
-            _contactsCollection.Clear();
+            ContactsCollection.Clear();
 
             if (user != null)
             {
                 foreach (var k in contactManager.GetUser(user.Login, user.Password).GetContacts())
                 {
-                    _contactsCollection.Add(k);
+                    ContactsCollection.Add(k);
                 }
                 Lv.Items.Refresh();
                 Lv2.Items.Refresh();
@@ -258,6 +219,7 @@ namespace WpfApp1
 
         private void Lv_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            ContactDetails();
 
         }
 
@@ -266,12 +228,13 @@ namespace WpfApp1
 
             List<Contact> listToUpdateUserContacts = new List<Contact>();
 
-            foreach (var item in _contactsCollection)
+            foreach (var item in ContactsCollection)
             {
                 listToUpdateUserContacts.Add(item);
             }
 
             user.SaveContacts(listToUpdateUserContacts);
+            ContactDetails();
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)
@@ -286,7 +249,8 @@ namespace WpfApp1
         {
             user = null;
             setLoggedState(false);
-            _contactsCollection.Clear();
+            ContactsCollection.Clear();
+            ContactInfo.Visibility = Visibility.Collapsed;
         }
 
         private ICommand _addBezierPatch;
@@ -308,7 +272,7 @@ namespace WpfApp1
         {
             List<Contact> listToUpdateUserContacts = new List<Contact>();
 
-            foreach (var item in _contactsCollection)
+            foreach (var item in ContactsCollection)
             {
                 listToUpdateUserContacts.Add(item);
             }
@@ -326,6 +290,7 @@ namespace WpfApp1
         private void ContactDetails()
         {
             temp = (Contact)Lv2.SelectedItem;
+
             if (temp == null)
             {
                 ContactInfo.Visibility = Visibility.Collapsed;
@@ -346,6 +311,9 @@ namespace WpfApp1
                     Image1.Source = new BitmapImage(new Uri("D:/Studia/Informatyka MGR/Semestr 1/PwSG/WPF lab1/WpfApp1/WpfApp1/Resources/man.png"));
                 }
             }
+
+           
+
         }
 
         private void DeleteImage_Click(object sender, RoutedEventArgs e)
@@ -354,13 +322,14 @@ namespace WpfApp1
             if (temp != null)
             {
 
-                _contactsCollection.Remove(temp);
+                ContactsCollection.Remove(temp);
                 Lv2.Items.Refresh();
                 Lv.Items.Refresh();
 
             }
             ContactInfo.Visibility = Visibility.Collapsed;
         }
+
     }
 
 

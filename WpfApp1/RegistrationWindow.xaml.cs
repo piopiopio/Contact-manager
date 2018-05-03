@@ -22,12 +22,12 @@ namespace WpfApp1
     {
         MainWindow a;
         bool validatedEmail = false;
-
+        Brush brush;
         public RegistrationWindow()
         {
             InitializeComponent();
             DataContext = new ViewModelBase();
-         
+            brush = RegisterEmail.BorderBrush;
         }
 
         private void RegisterCancel_Click(object sender, RoutedEventArgs e)
@@ -39,7 +39,7 @@ namespace WpfApp1
         private void RegisterRegster_Click(object sender, RoutedEventArgs e)
         {
             a = (MainWindow)Owner;
-            if ((RegisterPassword.Password == RegisterConfirmPassword.Text) && validatedEmail && RegisterPassword.Password!="" && RegisterLogin.Text!="")
+            if ((RegisterPassword.Password == RegisterConfirmPassword.Password) && validatedEmail && RegisterPassword.Password != "" && RegisterLogin.Text != "")
             {
                 a.RegisterUser(RegisterLogin.Text, RegisterPassword.Password);
                 Owner.Opacity = 1;
@@ -55,24 +55,33 @@ namespace WpfApp1
             Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
             bool result = regex.IsMatch(RegisterEmail.Text);
 
+
             if (result)
             {
                 RegisterEmailGrid.Visibility = Visibility.Hidden;
                 validatedEmail = true;
+                RegisterEmail.BorderThickness = new Thickness(1);
+                RegisterEmail.BorderBrush = brush;
+                //RegisterEmail.BorderBrush = SystemColors.ActiveBorderBrush;
+
             }
             else
             {
                 validatedEmail = false;
                 RegisterEmailGrid.Visibility = Visibility.Visible;
+                RegisterEmail.BorderThickness = new Thickness(2);
+                RegisterEmail.BorderBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+
+
             }
 
         }
 
 
-    
-            
-      
-        
+
+
+
+
 
     }
 }
