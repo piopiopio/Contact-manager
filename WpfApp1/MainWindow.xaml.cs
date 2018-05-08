@@ -121,7 +121,7 @@ namespace WpfApp1
         }
         private void Lv_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete)
+            if (e.Key == Key.Delete && e.OriginalSource.GetType() == typeof(DataGridCell))
             {
                 var selectedItems = new List<object>();
                 foreach (var item in (Lv.SelectedItems))
@@ -162,72 +162,76 @@ namespace WpfApp1
                     }
                 }
             }
-                //foreach (var selectedItem in selectedItems)
-                //{
-                //    bool canDelete;
-                //    try
-                //    {
-                //        var x = (Contact)selectedItem;
-                //        canDelete = true;
-                //    }
-                //    catch (Exception)
-                //    {
-                //        canDelete = false;
-                //    }
 
-                //    //bool isOfType = Lv.SelectedItem.
-                //    if (canDelete)
-                //    {
-                //        if ((Contact)Lv2.SelectedItem == (Contact)selectedItem)
-                //        {
-                //            var a = Lv2.SelectedIndex;
-                //            Lv2.SelectedIndex = a + 1;
-
-                //            if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
-                //            {
-                //                Lv2.SelectedIndex = Lv2.Items.Count - 2;
-                //            }
-                //        }
-
-                //        ContactsCollection.Remove((Contact)selectedItem);
-                //    }
-            //}
-                //while (Lv.SelectedItems != null && canDelete)
-                //{
-                //    try
-                //    {
-                //        var x = (Contact)Lv.SelectedItem;
-                //        canDelete = true;
-                //    }
-                //    catch(Exception)
-                //    {
-                //        canDelete = false;
-                //    }
-
-                //    //bool isOfType = Lv.SelectedItem.
-                //    if (canDelete)
-                //    {
-                //        if ((Contact)Lv2.SelectedItem == (Contact)Lv.SelectedItem)
-                //        {
-                //            var a = Lv2.SelectedIndex;
-                //            Lv2.SelectedIndex = a + 1;
-
-                //            if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
-                //            {
-                //                Lv2.SelectedIndex = Lv2.Items.Count - 2;
-                //            }
-
-                //            ContactsCollection.Remove((Contact)Lv.SelectedItem);
-                //        }
-                //    }
-
-
-                //}
-
-            //}
 
             ContactDetails();
         }
+        //foreach (var selectedItem in selectedItems)
+        //{
+        //    bool canDelete;
+        //    try
+        //    {
+        //        var x = (Contact)selectedItem;
+        //        canDelete = true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        canDelete = false;
+        //    }
+
+        //    //bool isOfType = Lv.SelectedItem.
+        //    if (canDelete)
+        //    {
+        //        if ((Contact)Lv2.SelectedItem == (Contact)selectedItem)
+        //        {
+        //            var a = Lv2.SelectedIndex;
+        //            Lv2.SelectedIndex = a + 1;
+
+        //            if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
+        //            {
+        //                Lv2.SelectedIndex = Lv2.Items.Count - 2;
+        //            }
+        //        }
+
+        //        ContactsCollection.Remove((Contact)selectedItem);
+        //    }
+        //}
+        //while (Lv.SelectedItems != null && canDelete)
+        //{
+        //    try
+        //    {
+        //        var x = (Contact)Lv.SelectedItem;
+        //        canDelete = true;
+        //    }
+        //    catch(Exception)
+        //    {
+        //        canDelete = false;
+        //    }
+
+        //    //bool isOfType = Lv.SelectedItem.
+        //    if (canDelete)
+        //    {
+        //        if ((Contact)Lv2.SelectedItem == (Contact)Lv.SelectedItem)
+        //        {
+        //            var a = Lv2.SelectedIndex;
+        //            Lv2.SelectedIndex = a + 1;
+
+        //            if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
+        //            {
+        //                Lv2.SelectedIndex = Lv2.Items.Count - 2;
+        //            }
+
+        //            ContactsCollection.Remove((Contact)Lv.SelectedItem);
+        //        }
+        //    }
+
+
+        //}
+
+        //    //}
+
+        //    ContactDetails();
+        //}
 
 
 

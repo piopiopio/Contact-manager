@@ -79,7 +79,17 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Fill" TargetName="theEllipse" >
+                                    <Setter.Value>
+                                        <RadialGradientBrush>
+                                            <GradientStop Color="#FF1EC2E6" Offset="0"/>
+                                            <GradientStop Color="Beige" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
 
+                            </Trigger>
                             <Trigger Property="IsPressed" Value="true">
                                 <!--<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>-->
@@ -179,11 +189,11 @@
                                 </Trigger>
 
                                 <Trigger Property="IsSelected" Value="true">
-                                    <Setter Property="Background" Value="#E5E1CF"/>
+                                    <Setter Property="Background" Value="White"/>
                                 </Trigger>
 
                                 <Trigger Property="IsMouseOver" Value="true">
-                                    <Setter Property="Background" Value="#E5E1CF"/>
+                                    <Setter Property="Background" Value="#FF94B9BF"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -267,7 +277,7 @@
 
                     </Grid>
 
-                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" CanUserDeleteRows="False" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus">
+                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" CanUserDeleteRows="False" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus" >
                         
                         
                         
