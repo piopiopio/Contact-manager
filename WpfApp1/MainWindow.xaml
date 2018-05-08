@@ -266,14 +266,17 @@
 
                     </Grid>
 
-                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus">
-                        <!--<DataGrid.Columns >-->
-                            <!--<DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="80"/>
+                    <DataGrid x:Name="Lv" Margin="5,5,5,5" CanUserDeleteRows="False" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus">
+                        
+                        
+                        
+                        <!--<DataGrid.Columns >
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="80"/>
                             <DataGridTextColumn Binding="{Binding Surname}" Header="Surname" Width="80"/>
                             <DataGridTextColumn Binding="{Binding Email}" Header="Email" Width="170" />
                             <DataGridTextColumn Binding="{Binding Phone}" Header="Phone" Width="130"/>
-                            <DataGridTextColumn Binding="{Binding Gender}" Header="Gender" Width="70"/>-->
-                        <!--</DataGrid.Columns>-->
+                            <DataGridTextColumn Binding="{Binding Gender}" Header="Gender" Width="70"/>
+                        </DataGrid.Columns>-->
                     </DataGrid>
                 </StackPanel>
 
@@ -286,8 +289,8 @@
             <Rectangle Name="PleaseLogin" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" StrokeThickness="0" Visibility="Visible" >
                 <Rectangle.Fill>
                     <RadialGradientBrush>
-                        <GradientStop Color="#FFFFB900" Offset="0"/>
-                        <GradientStop Color="#FF79FF00" Offset="1"/>
+                        <GradientStop Color="#FFFFBD7C" Offset="0"/>
+                        <GradientStop Color="#FFD1FF8C" Offset="1"/>
                     </RadialGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
