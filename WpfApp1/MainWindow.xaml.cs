@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -122,20 +123,108 @@ namespace WpfApp1
         {
             if (e.Key == Key.Delete)
             {
-                if ((Contact)Lv2.SelectedItem == (Contact)Lv.SelectedItem)
+                var selectedItems = new List<object>();
+                foreach (var item in (Lv.SelectedItems))
                 {
-                    var a = Lv2.SelectedIndex;
-                    Lv2.SelectedIndex = a + 1;
-
-                    if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
+                    try
                     {
-                        Lv2.SelectedIndex = Lv2.Items.Count - 2;
+                        selectedItems.Add((Contact)item);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+
+                }
+
+
+                foreach (var item in selectedItems)
+                {
+                    int a = 0;
+                    if ((Contact)Lv2.SelectedItem == (Contact)item)
+                    {
+                        a =  1;
+                        
+
+                        if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
+                        {
+                            a = -1;
+                        }
+
+                       
+                    }
+                    var b = Lv2.SelectedIndex;
+                    ContactsCollection.Remove((Contact)item);
+                    if (b != -1)
+                    {
+                        //Lv2.SelectedIndex =b+ a;
+                        Lv2.SelectedItem= ContactsCollection.ElementAt(a + b);
                     }
                 }
-                ContactsCollection.Remove((Contact)Lv.SelectedItem);
-
-
             }
+                //foreach (var selectedItem in selectedItems)
+                //{
+                //    bool canDelete;
+                //    try
+                //    {
+                //        var x = (Contact)selectedItem;
+                //        canDelete = true;
+                //    }
+                //    catch (Exception)
+                //    {
+                //        canDelete = false;
+                //    }
+
+                //    //bool isOfType = Lv.SelectedItem.
+                //    if (canDelete)
+                //    {
+                //        if ((Contact)Lv2.SelectedItem == (Contact)selectedItem)
+                //        {
+                //            var a = Lv2.SelectedIndex;
+                //            Lv2.SelectedIndex = a + 1;
+
+                //            if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
+                //            {
+                //                Lv2.SelectedIndex = Lv2.Items.Count - 2;
+                //            }
+                //        }
+
+                //        ContactsCollection.Remove((Contact)selectedItem);
+                //    }
+            //}
+                //while (Lv.SelectedItems != null && canDelete)
+                //{
+                //    try
+                //    {
+                //        var x = (Contact)Lv.SelectedItem;
+                //        canDelete = true;
+                //    }
+                //    catch(Exception)
+                //    {
+                //        canDelete = false;
+                //    }
+
+                //    //bool isOfType = Lv.SelectedItem.
+                //    if (canDelete)
+                //    {
+                //        if ((Contact)Lv2.SelectedItem == (Contact)Lv.SelectedItem)
+                //        {
+                //            var a = Lv2.SelectedIndex;
+                //            Lv2.SelectedIndex = a + 1;
+
+                //            if (Lv2.SelectedIndex == Lv2.Items.Count - 1)
+                //            {
+                //                Lv2.SelectedIndex = Lv2.Items.Count - 2;
+                //            }
+
+                //            ContactsCollection.Remove((Contact)Lv.SelectedItem);
+                //        }
+                //    }
+
+
+                //}
+
+            //}
 
             ContactDetails();
         }
@@ -273,6 +362,7 @@ namespace WpfApp1
             setLoggedState(false);
             ContactsCollection.Clear();
             ContactInfo.Visibility = Visibility.Collapsed;
+            Lv2.UnselectAll();
         }
 
         private ICommand _addBezierPatch;

@@ -79,6 +79,7 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
+
                             <Trigger Property="IsPressed" Value="true">
                                 <!--<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>-->
@@ -266,7 +267,7 @@
 
                     </Grid>
 
-                    <DataGrid x:Name="Lv" Margin="5,5,5,5" CanUserDeleteRows="False" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus">
+                    <DataGrid x:Name="Lv" Margin="5,5,5,5" Grid.Column="0" CanUserDeleteRows="False" Grid.Row="0" ItemsSource="{Binding}" SelectionChanged="Lv_SelectionChanged" MouseDown="Lv_MouseDown"  PreviewKeyDown ="Lv_KeyDown" LostKeyboardFocus="Lv_LostKeyboardFocus">
                         
                         
                         
