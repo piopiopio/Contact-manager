@@ -155,10 +155,10 @@ namespace WpfApp1
                     }
                     var b = Lv2.SelectedIndex;
                     ContactsCollection.Remove((Contact)item);
-                    if (b != -1)
+                    if (b != -1 && ContactsCollection.Count>0)
                     {
                         //Lv2.SelectedIndex =b+ a;
-                        Lv2.SelectedItem= ContactsCollection.ElementAt(a + b);
+                        Lv2.SelectedItem= ContactsCollection.ElementAt(Math.Min((a + b), ContactsCollection.Count-1));
                     }
                 }
             }
